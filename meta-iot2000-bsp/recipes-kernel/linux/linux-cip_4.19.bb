@@ -1,0 +1,17 @@
+DESCRIPTION = "Linux Kernel for IOT2000 based on CIP SLTS version"
+SECTION = "kernel"
+
+require recipes-kernel/linux/linux-yocto.inc
+require linux-cip_4.19.inc
+
+PV = "${LINUX_VERSION}"
+
+LINUX_VERSION_EXTENSION = ""
+
+COMPATIBLE_MACHINE_iot2000 = "iot2000"
+KMACHINE_iot2000 = "intel-quark"
+
+# Accelerated entropy collection.
+# These are not yet ready for the -rt kernel.
+# TBD: move non-rt patch here
+KERNEL_PATCHES += " "

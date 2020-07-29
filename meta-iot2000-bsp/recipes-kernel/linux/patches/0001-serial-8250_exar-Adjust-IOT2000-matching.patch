@@ -1,7 +1,7 @@
-From 186847dd575416b337ae370b46744a163fcf31fc Mon Sep 17 00:00:00 2001
+From 3d5122288a65df473b5ba385032ed6903c3e6df0 Mon Sep 17 00:00:00 2001
 From: Su Bao Cheng <baocheng.su@siemens.com>
 Date: Fri, 12 Oct 2018 15:12:37 +0200
-Subject: [PATCH 07/32] serial: 8250_exar: Adjust IOT2000 matching
+Subject: [PATCH 01/10] serial: 8250_exar: Adjust IOT2000 matching
 
 Since there are more IOT2040 variants with identical hardware but
 different asset tags, the asset tag matching should be adjusted to
@@ -18,10 +18,10 @@ Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
  1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
-index be82707d6cb8..3eb3a7674a0f 100644
+index 870735776437..6f730c357bee 100644
 --- a/drivers/tty/serial/8250/8250_exar.c
 +++ b/drivers/tty/serial/8250/8250_exar.c
-@@ -338,12 +338,15 @@ static const struct exar8250_platform iot2040_platform = {
+@@ -369,12 +369,15 @@ static const struct exar8250_platform iot2040_platform = {
  	.register_gpio = iot2040_register_gpio,
  };
  
@@ -40,5 +40,5 @@ index be82707d6cb8..3eb3a7674a0f 100644
  		.driver_data = (void *)&iot2040_platform,
  	},
 -- 
-2.16.4
+2.25.1
 

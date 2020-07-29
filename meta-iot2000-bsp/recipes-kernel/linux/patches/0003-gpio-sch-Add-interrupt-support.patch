@@ -1,7 +1,7 @@
-From d046375f1bc2a63d945bad8c4026ce1a6eabd838 Mon Sep 17 00:00:00 2001
+From 6e4d5846e088ba9f0b147464ee55f4bd7e24e6ed Mon Sep 17 00:00:00 2001
 From: Jan Kiszka <jan.kiszka@siemens.com>
 Date: Wed, 17 Apr 2019 22:26:22 +0200
-Subject: [PATCH 13/32] gpio: sch: Add interrupt support
+Subject: [PATCH 03/10] gpio: sch: Add interrupt support
 
 Validated on the Quark platform, this adds interrupt support on rising
 and/or falling edges.
@@ -11,14 +11,14 @@ missing devm_* services.
 
 Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
 ---
- drivers/gpio/gpio-sch.c | 140 +++++++++++++++++++++++++++++++++++++++++++++---
+ drivers/gpio/gpio-sch.c | 140 ++++++++++++++++++++++++++++++++++++++--
  1 file changed, 133 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/gpio/gpio-sch.c b/drivers/gpio/gpio-sch.c
-index 6715828c3940..1d1dadebc8c1 100644
+index e9878f6ede67..d48f7f767e1a 100644
 --- a/drivers/gpio/gpio-sch.c
 +++ b/drivers/gpio/gpio-sch.c
-@@ -32,6 +32,10 @@
+@@ -31,6 +31,10 @@
  #define GEN	0x00
  #define GIO	0x04
  #define GLV	0x08
@@ -29,7 +29,7 @@ index 6715828c3940..1d1dadebc8c1 100644
  
  struct sch_gpio {
  	struct gpio_chip chip;
-@@ -39,6 +43,7 @@ struct sch_gpio {
+@@ -38,6 +42,7 @@ struct sch_gpio {
  	unsigned short iobase;
  	unsigned short core_base;
  	unsigned short resume_base;
@@ -37,7 +37,7 @@ index 6715828c3940..1d1dadebc8c1 100644
  };
  
  static unsigned sch_gpio_offset(struct sch_gpio *sch, unsigned gpio,
-@@ -94,10 +99,11 @@ static void sch_gpio_reg_set(struct sch_gpio *sch, unsigned gpio, unsigned reg,
+@@ -93,10 +98,11 @@ static void sch_gpio_reg_set(struct sch_gpio *sch, unsigned gpio, unsigned reg,
  static int sch_gpio_direction_in(struct gpio_chip *gc, unsigned gpio_num)
  {
  	struct sch_gpio *sch = gpiochip_get_data(gc);
@@ -51,7 +51,7 @@ index 6715828c3940..1d1dadebc8c1 100644
  	return 0;
  }
  
-@@ -110,20 +116,22 @@ static int sch_gpio_get(struct gpio_chip *gc, unsigned gpio_num)
+@@ -109,20 +115,22 @@ static int sch_gpio_get(struct gpio_chip *gc, unsigned gpio_num)
  static void sch_gpio_set(struct gpio_chip *gc, unsigned gpio_num, int val)
  {
  	struct sch_gpio *sch = gpiochip_get_data(gc);
@@ -78,7 +78,7 @@ index 6715828c3940..1d1dadebc8c1 100644
  
  	/*
  	 * according to the datasheet, writing to the level register has no
-@@ -145,6 +153,12 @@ static int sch_gpio_get_direction(struct gpio_chip *gc, unsigned gpio_num)
+@@ -144,6 +152,12 @@ static int sch_gpio_get_direction(struct gpio_chip *gc, unsigned gpio_num)
  	return sch_gpio_reg_get(sch, gpio_num, GIO);
  }
  
@@ -88,10 +88,10 @@ index 6715828c3940..1d1dadebc8c1 100644
 +	return sch->irq_base + offset;
 +}
 +
- static struct gpio_chip sch_gpio_chip = {
+ static const struct gpio_chip sch_gpio_chip = {
  	.label			= "sch_gpio",
  	.owner			= THIS_MODULE,
-@@ -153,12 +167,96 @@ static struct gpio_chip sch_gpio_chip = {
+@@ -152,12 +166,96 @@ static const struct gpio_chip sch_gpio_chip = {
  	.direction_output	= sch_gpio_direction_out,
  	.set			= sch_gpio_set,
  	.get_direction		= sch_gpio_get_direction,
@@ -188,7 +188,7 @@ index 6715828c3940..1d1dadebc8c1 100644
  
  	sch = devm_kzalloc(&pdev->dev, sizeof(*sch), GFP_KERNEL);
  	if (!sch)
-@@ -222,7 +320,35 @@ static int sch_gpio_probe(struct platform_device *pdev)
+@@ -221,7 +319,35 @@ static int sch_gpio_probe(struct platform_device *pdev)
  
  	platform_set_drvdata(pdev, sch);
  
@@ -226,5 +226,5 @@ index 6715828c3940..1d1dadebc8c1 100644
  
  static struct platform_driver sch_gpio_driver = {
 -- 
-2.16.4
+2.25.1
 

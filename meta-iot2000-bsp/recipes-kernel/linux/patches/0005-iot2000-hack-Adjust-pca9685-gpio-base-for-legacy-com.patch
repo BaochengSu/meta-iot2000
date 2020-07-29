@@ -1,7 +1,7 @@
-From e679338fe980d8722246366906bf71971fa2f538 Mon Sep 17 00:00:00 2001
+From 3911ff00e896e28e3a072c6b1f21c83d111d4ddc Mon Sep 17 00:00:00 2001
 From: Jan Kiszka <jan.kiszka@siemens.com>
 Date: Thu, 25 May 2017 13:05:12 +0200
-Subject: [PATCH 15/32] iot2000-hack: Adjust pca9685-gpio base for legacy
+Subject: [PATCH 05/10] iot2000-hack: Adjust pca9685-gpio base for legacy
  compatibility
 
 mraa and the Arduino runtime expect this.
@@ -14,7 +14,7 @@ Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-index d2b92e940e38..611b9263a896 100644
+index 259fd58812ae..821c71c39ce3 100644
 --- a/drivers/pwm/pwm-pca9685.c
 +++ b/drivers/pwm/pwm-pca9685.c
 @@ -19,6 +19,7 @@
@@ -25,7 +25,7 @@ index d2b92e940e38..611b9263a896 100644
  #include <linux/acpi.h>
  #include <linux/gpio/driver.h>
  #include <linux/i2c.h>
-@@ -222,7 +223,10 @@ static int pca9685_pwm_gpio_probe(struct pca9685 *pca)
+@@ -220,7 +221,10 @@ static int pca9685_pwm_gpio_probe(struct pca9685 *pca)
  	pca->gpio.direction_output = pca9685_pwm_gpio_direction_output;
  	pca->gpio.get = pca9685_pwm_gpio_get;
  	pca->gpio.set = pca9685_pwm_gpio_set;
@@ -38,5 +38,5 @@ index d2b92e940e38..611b9263a896 100644
  	pca->gpio.can_sleep = true;
  
 -- 
-2.16.4
+2.25.1
 

@@ -1,7 +1,7 @@
-From 6cb95e11da746d51f1defd91d5904f90c15fb743 Mon Sep 17 00:00:00 2001
+From f922a885dedfd57f5b80b03bde0624d3a5eeda32 Mon Sep 17 00:00:00 2001
 From: Theodore Ts'o <tytso@mit.edu>
 Date: Wed, 20 Feb 2019 16:06:38 -0500
-Subject: [PATCH 30/32] random: only read from /dev/random after its pool has
+Subject: [PATCH 09/10] random: only read from /dev/random after its pool has
  received 128 bits
 
 Immediately after boot, we allow reads from /dev/random before its
@@ -20,23 +20,23 @@ entropy_total field any more.
 
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 ---
- drivers/char/random.c         | 44 +++++++++++++++++++++----------------------
- include/trace/events/random.h | 13 +++++--------
+ drivers/char/random.c         | 44 +++++++++++++++++------------------
+ include/trace/events/random.h | 13 ++++-------
  2 files changed, 27 insertions(+), 30 deletions(-)
 
 diff --git a/drivers/char/random.c b/drivers/char/random.c
-index ca9127abad52..f37a90896821 100644
+index d5f970d039bb..ee8f5ed49d6c 100644
 --- a/drivers/char/random.c
 +++ b/drivers/char/random.c
-@@ -466,7 +466,6 @@ struct entropy_store {
+@@ -471,7 +471,6 @@ struct entropy_store {
  	unsigned short add_ptr;
  	unsigned short input_rotate;
  	int entropy_count;
 -	int entropy_total;
  	unsigned int initialized:1;
- 	unsigned int limit:1;
  	unsigned int last_data_init:1;
-@@ -642,7 +641,7 @@ static void process_random_ready_list(void)
+ 	__u8 last_data[EXTRACT_SIZE];
+@@ -644,7 +643,7 @@ static void process_random_ready_list(void)
   */
  static void credit_entropy_bits(struct entropy_store *r, int nbits)
  {
@@ -45,7 +45,7 @@ index ca9127abad52..f37a90896821 100644
  	const int pool_size = r->poolinfo->poolfracbits;
  	int nfrac = nbits << ENTROPY_SHIFT;
  
-@@ -697,23 +696,25 @@ retry:
+@@ -699,23 +698,25 @@ static void credit_entropy_bits(struct entropy_store *r, int nbits)
  		entropy_count = 0;
  	} else if (entropy_count > pool_size)
  		entropy_count = pool_size;
@@ -78,7 +78,7 @@ index ca9127abad52..f37a90896821 100644
  			crng_reseed(&primary_crng, r);
  			entropy_bits = r->entropy_count >> ENTROPY_SHIFT;
  		}
-@@ -723,20 +724,14 @@ retry:
+@@ -726,20 +727,14 @@ static void credit_entropy_bits(struct entropy_store *r, int nbits)
  			wake_up_interruptible(&random_read_wait);
  			kill_fasync(&fasync, SIGIO, POLL_IN);
  		}
@@ -106,7 +106,7 @@ index ca9127abad52..f37a90896821 100644
  	}
  }
  
-@@ -1510,6 +1505,11 @@ static ssize_t extract_entropy_user(struct entropy_store *r, void __user *buf,
+@@ -1557,6 +1552,11 @@ static ssize_t extract_entropy_user(struct entropy_store *r, void __user *buf,
  	int large_request = (nbytes > 256);
  
  	trace_extract_entropy_user(r->name, nbytes, ENTROPY_BITS(r), _RET_IP_);
@@ -119,10 +119,10 @@ index ca9127abad52..f37a90896821 100644
  	nbytes = account(r, nbytes, 0, 0);
  
 diff --git a/include/trace/events/random.h b/include/trace/events/random.h
-index 4684de344c5d..d5323630be90 100644
+index 0560dfc33f1c..32c10a515e2d 100644
 --- a/include/trace/events/random.h
 +++ b/include/trace/events/random.h
-@@ -61,15 +61,14 @@ DEFINE_EVENT(random__mix_pool_bytes, mix_pool_bytes_nolock,
+@@ -62,15 +62,14 @@ DEFINE_EVENT(random__mix_pool_bytes, mix_pool_bytes_nolock,
  
  TRACE_EVENT(credit_entropy_bits,
  	TP_PROTO(const char *pool_name, int bits, int entropy_count,
@@ -140,7 +140,7 @@ index 4684de344c5d..d5323630be90 100644
  		__field(unsigned long,	IP			)
  	),
  
-@@ -77,14 +76,12 @@ TRACE_EVENT(credit_entropy_bits,
+@@ -78,14 +77,12 @@ TRACE_EVENT(credit_entropy_bits,
  		__entry->pool_name	= pool_name;
  		__entry->bits		= bits;
  		__entry->entropy_count	= entropy_count;
@@ -159,5 +159,5 @@ index 4684de344c5d..d5323630be90 100644
  
  TRACE_EVENT(push_to_pool,
 -- 
-2.16.4
+2.25.1
 

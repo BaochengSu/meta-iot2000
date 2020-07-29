@@ -1,7 +1,7 @@
-From 63e4ba1816a80a258e4c7a846b3bd389b9a04e32 Mon Sep 17 00:00:00 2001
+From 04dcc50ca65355725426ac717acfee49dcb9904e Mon Sep 17 00:00:00 2001
 From: Jan Kiszka <jan.kiszka@siemens.com>
 Date: Thu, 25 May 2017 11:09:42 +0200
-Subject: [PATCH 14/32] iot2000-hack: Work around DSDT mistake
+Subject: [PATCH 04/10] iot2000-hack: Work around DSDT mistake
 
 Until we have a new firmware revision, fix up the incorrect GPIO
 interrupt pin in software.
@@ -10,22 +10,14 @@ Nothing for upstream.
 
 Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
 ---
- drivers/gpio/gpiolib-acpi.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpio/gpiolib-acpi.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 16a7b6816744..304855b3ecb8 100644
+index 18f5973b9697..457bdd878b9a 100644
 --- a/drivers/gpio/gpiolib-acpi.c
 +++ b/drivers/gpio/gpiolib-acpi.c
-@@ -10,6 +10,7 @@
-  * published by the Free Software Foundation.
-  */
- 
-+#include <linux/dmi.h>
- #include <linux/errno.h>
- #include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
-@@ -408,6 +409,13 @@ static int acpi_find_gpio(struct acpi_resource *ares, void *data)
+@@ -617,6 +617,13 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
  		if (pin_index >= agpio->pin_table_length)
  			return 1;
  
@@ -40,5 +32,5 @@ index 16a7b6816744..304855b3ecb8 100644
  					      agpio->pin_table[pin_index]);
  		lookup->info.gpioint =
 -- 
-2.16.4
+2.25.1
 
