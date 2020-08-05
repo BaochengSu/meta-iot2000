@@ -1,0 +1,28 @@
+From d73549d7b4ce330946c995cba3b77d8d10cf5e4a Mon Sep 17 00:00:00 2001
+From: Su Baocheng <baocheng.su@siemens.com>
+Date: Wed, 29 Jul 2020 11:48:41 +0800
+Subject: [PATCH 11/11] temp: fix build error
+
+fix patch 0007-iot2000-hack-gpio-pca953x-add-drive-property.patch
+
+Signed-off-by: Su Baocheng <baocheng.su@siemens.com>
+---
+ drivers/gpio/gpiolib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index a4b470aae60b..4e7e643bd122 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2802,7 +2802,7 @@ int gpiod_set_drive(struct gpio_desc *desc, unsigned mode)
+ {
+ 	struct gpio_chip	*chip;
+ 
+-	chip = desc->chip;
++	chip = desc->gdev->chip;
+ 	if (!chip || !chip->set || !chip->set_drive)
+ 		goto fail;
+ 
+-- 
+2.25.1
+

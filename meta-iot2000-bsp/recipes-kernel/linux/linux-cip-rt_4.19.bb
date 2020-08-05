@@ -2,9 +2,9 @@ DESCRIPTION = "Linux real-time Kernel for IOT2000 based on CIP SLTS version"
 SECTION = "kernel"
 
 require recipes-kernel/linux/linux-yocto.inc
-require linux-cip_4.4.inc
+require linux-cip_4.19.inc
 
-LINUX_VERSION = "4.4.190-cip36-rt25"
+LINUX_VERSION = "4.19.132-cip30-rt12"
 SRC_URI += " \
     file://rt-0001-spi-pca2xx-pci-Allow-MSI.patch \
     file://rt-0002-gpio-dwapb-Work-around-RT-full-s-enforced-IRQ-thread.patch \

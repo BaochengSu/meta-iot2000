@@ -1,0 +1,27 @@
+From be38d80ccb85d06b67f7688f3e6b35fb522cb325 Mon Sep 17 00:00:00 2001
+From: Su Baocheng <baocheng.su@siemens.com>
+Date: Wed, 29 Jul 2020 13:21:36 +0800
+Subject: [PATCH 12/12] temp: fix build error
+
+fix patch 0007-iot2000-hack-gpio-pca953x-add-drive-property.patch
+
+Signed-off-by: Su Baocheng <baocheng.su@siemens.com>
+---
+ drivers/gpio/gpio-pca953x.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index d32efc67f685..69e4adba7958 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -14,6 +14,7 @@
+ #include <linux/acpi.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/gpio/consumer.h>
++#include <linux/gpio.h>
+ #include <linux/i2c.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+-- 
+2.25.1
+

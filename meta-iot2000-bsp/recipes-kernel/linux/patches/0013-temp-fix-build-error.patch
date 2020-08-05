@@ -1,0 +1,28 @@
+From f78a87b7be5334ed82ac9535504f516261a5cea9 Mon Sep 17 00:00:00 2001
+From: Su Baocheng <baocheng.su@siemens.com>
+Date: Wed, 29 Jul 2020 14:10:33 +0800
+Subject: [PATCH 13/13] temp: fix build error
+
+fix patch 0008-iot2000-hack-pwm-pca-9685-Provide-chip-level-pwm_per.patch
+
+Signed-off-by: Su Baocheng <baocheng.su@siemens.com>
+---
+ drivers/pwm/pwm-pca9685.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+index 984e85c92b86..24ed27d3842b 100644
+--- a/drivers/pwm/pwm-pca9685.c
++++ b/drivers/pwm/pwm-pca9685.c
+@@ -478,7 +478,7 @@ static ssize_t pwm_period_store(struct device *parent,
+ 	for (channel = 0; channel < PCA9685_MAXCHAN; channel++) {
+ 		pwm = &chip->pwms[channel];
+ 
+-		if (pca9685_pwm_is_gpio(pca, pwm))
++		if (pca9685_pwm_test_and_set_inuse(pca, pwm->hwpwm))
+ 			continue;
+ 
+ 		/* Scale the rise time to maintain duty cycle */
+-- 
+2.25.1
+
