@@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=6621dba0ae00c5595cc3b482008b021a"
 
 inherit npm-ng
 
+export PYTHON = "python3"
+
 NPM_LOCAL_INSTALL_DIR = "/home/root/.node-red"
 
 INSANE_SKIP_${PN} += "textrel"
