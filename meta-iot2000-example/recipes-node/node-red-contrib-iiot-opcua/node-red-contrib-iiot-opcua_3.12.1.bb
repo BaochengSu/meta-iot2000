@@ -3,7 +3,7 @@ SUMMARY = "The next evolution IoT/IIoT OPC UA toolbox package for Node-RED based
 # WARNING: the following LICENSE and LIC_FILES_CHKSUM values are best guesses - it is
 # your responsibility to verify that the values are complete and correct.
 LICENSE = "Apache-2.0 & ISC & BSD & BSD-3-Clause & MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=fb4562eee6b20e9a23a17f38a9f2527a"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=2419952b1e443ba100cb1c97b931ddab"
 
 inherit npm-ng
 
